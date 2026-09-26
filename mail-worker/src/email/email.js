@@ -12,7 +12,6 @@ import userService from '../service/user-service';
 import telegramService from '../service/telegram-service';
 import aiService from '../service/ai-service';
 import webhookService from '../service/webhook-service';
-import wecomAppService from '../service/wecom-app-service';
 
 export async function email(message, env, ctx) {
 
@@ -38,12 +37,6 @@ export async function email(message, env, ctx) {
 			aiCode,
 			aiCodeFilter
 		} = await settingService.query({ env });
-
-		// 企业微信机器人 Webhook（环境变量方式，优先于系统设置里的通用 webhook）
-		const wecomWebhookUrl = env.WECOM_WEBHOOK_URL || '';
-
-		// 企业微信自建应用消息推送（企业ID#Secret#AgentID）
-		const wecomAppEnabled = !!(env.WECOM_APP_PUSH || (env.WECOM_CORP_ID && env.WECOM_APP_SECRET && env.WECOM_AGENT_ID));
 
 		if (receive === settingConst.receive.CLOSE) {
 			message.setReject('Service suspended');
@@ -140,7 +133,7 @@ export async function email(message, env, ctx) {
 		for (let item of email.attachments) {
 			let attachment = { ...item };
 			attachment.key = constant.ATTACHMENT_PREFIX + await fileUtils.getBuffHash(attachment.content) + fileUtils.getExtFileName(item.filename);
-			attachment.size = item.content?.length ?? item.content?.byteLength ?? 0;
+			attachment.size = item.content.length ?? item.content.byteLength;
 			attachments.push(attachment);
 			if (attachment.contentId) {
 				cidAttachments.push(attachment);
@@ -198,15 +191,9 @@ export async function email(message, env, ctx) {
 
 		}
 
-		//转发到 Webhook（企微机器人地址或通用 webhook 地址均可）
-		if ((wecomWebhookUrl || (webhookStatus === settingConst.webhookStatus.OPEN && webhookUrl))) {
-			const targetUrl = wecomWebhookUrl || webhookUrl;
-			await webhookService.sendEmail({ env }, emailRow, targetUrl, webhookRetry, webhookSecret);
-		}
-
-		//转发到企业微信自建应用（消息推送）
-		if (wecomAppEnabled) {
-			await wecomAppService.sendEmailToApp({ env }, emailRow);
+		//转发到 Webhook
+		if (webhookStatus === settingConst.webhookStatus.OPEN && webhookUrl) {
+			await webhookService.sendEmail({ env }, emailRow, webhookUrl, webhookRetry, webhookSecret);
 		}
 
 	} catch (e) {

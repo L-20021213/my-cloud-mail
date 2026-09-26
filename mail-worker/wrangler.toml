@@ -39,23 +39,5 @@ crons = ["0 * * * *"]
 #project_link = true
 #frontend_origin = "https://mail.example.com"
 
-# 企业微信群机器人通知（可选）：收到新邮件后推送到企微群。
-# 在企微群中添加"群机器人"，复制其 Webhook 地址填入此处即可。
-# 注意：这是群机器人 Webhook（形如 https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=xxx），
-# 不是企业微信应用的 企业ID#Secret#AgentID。
-#WECOM_WEBHOOK_URL = "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=你的群机器人key"
-
-# 企业微信自建应用消息推送（可选）：收到新邮件后通过企业微信应用推送给成员。
-# 方式一（推荐）：单变量，格式为 企业ID#Secret#AgentID，三参数用 # 连接：
-#WECOM_APP_PUSH = "企业ID#应用Secret#AgentID"
-# 方式二：三个独立变量
-#WECOM_CORP_ID = "企业ID"
-#WECOM_APP_SECRET = "应用Secret"
-#WECOM_AGENT_ID = "1000002"
-# 可选：指定接收成员 UserID（多个用 | 分隔），不填默认 @all 全员
-#WECOM_TO_USER = "zhangsan|lisi"
-# 可选：设为 0 关闭应用推送（默认开启）
-#WECOM_APP_SWITCH = "1"
-
 # 注意：本文件不再构建或托管 mail-vue/dist。
 # 前端由 Vercel 单独部署。
