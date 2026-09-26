@@ -1,0 +1,43 @@
+name = "cloud-mail"
+main = "src/index.js"
+compatibility_date = "2025-06-04"
+keep_vars = true
+
+[observability]
+enabled = true
+
+# 生产环境请取消注释并填写实际资源。
+#[[d1_databases]]
+#binding = "db"
+#database_name = "cloud-mail"
+#database_id = ""
+
+#[[kv_namespaces]]
+#binding = "kv"
+#id = ""
+
+#[[r2_buckets]]
+#binding = "r2"
+#bucket_name = ""
+
+#[[send_email]]
+#name = "email"
+
+[ai]
+binding = "ai"
+
+[triggers]
+crons = ["0 * * * *"]
+
+[vars]
+#ai_model = "@cf/meta/llama-3.1-8b-instruct-fast"
+#analysis_cache = false
+#orm_log = false
+#domain = ["example.com"]
+#admin = "admin@example.com"
+#jwt_secret = "请修改为随机长字符串"
+#project_link = true
+#frontend_origin = "https://mail.example.com"
+
+# 注意：本文件不再构建或托管 mail-vue/dist。
+# 前端由 Vercel 单独部署。
